@@ -1,23 +1,25 @@
-# Waymark
+# Trip's Trips
 
-A travel itinerary app for planning trips day by day.
+A pilot-friendly travel itinerary app: day-by-day plans, packing lists, and destination briefings.
 
 ## Features
 
-- Create trips with destination, dates, and a cover tone
-- Auto-generated day-by-day itinerary from your date range
-- Add stops with time, category, location, and notes
-- Edit or remove trips and activities anytime
+- Create trips with destination, dates, and a sky cover tone
+- Day-by-day itinerary from your date range
+- Packing lists with crew essentials and destination-based suggestions
+- Destination suggestions for places, tips, and packing
 - Data saved in your browser (`localStorage`)
 
 ## Get started
+
+From the project folder (the one with `package.json`):
 
 ```bash
 npm install
 npm run dev
 ```
 
-Then open the local URL Vite prints (usually `http://localhost:5173`).
+Open the local URL Vite prints (usually `http://localhost:5173`).
 
 ## Scripts
 

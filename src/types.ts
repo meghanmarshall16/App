@@ -21,6 +21,13 @@ export interface TripDay {
   activities: Activity[]
 }
 
+export interface PackingItem {
+  id: string
+  label: string
+  packed: boolean
+  source: 'custom' | 'suggested'
+}
+
 export interface Trip {
   id: string
   name: string
@@ -29,10 +36,11 @@ export interface Trip {
   endDate: string
   coverTone: CoverTone
   days: TripDay[]
+  packingList: PackingItem[]
   createdAt: string
 }
 
-export type CoverTone = 'ocean' | 'sunset' | 'forest' | 'slate'
+export type CoverTone = 'sky' | 'cloud' | 'ink' | 'mist'
 
 export interface TripInput {
   name: string
@@ -60,8 +68,10 @@ export const CATEGORY_LABELS: Record<ActivityCategory, string> = {
 }
 
 export const COVER_TONES: { id: CoverTone; label: string }[] = [
-  { id: 'ocean', label: 'Ocean' },
-  { id: 'sunset', label: 'Sunset' },
-  { id: 'forest', label: 'Forest' },
-  { id: 'slate', label: 'Slate' },
+  { id: 'sky', label: 'Sky' },
+  { id: 'cloud', label: 'Cloud' },
+  { id: 'ink', label: 'Ink' },
+  { id: 'mist', label: 'Mist' },
 ]
+
+export type TripTab = 'itinerary' | 'packing' | 'suggestions'

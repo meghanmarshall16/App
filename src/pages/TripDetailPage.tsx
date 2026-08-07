@@ -2,9 +2,11 @@ import { useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { AppShell } from '../components/AppShell'
 import { DaySection } from '../components/DaySection'
+import { DestinationSuggestions } from '../components/DestinationSuggestions'
+import { PackingList } from '../components/PackingList'
 import { TripForm } from '../components/TripForm'
-import { countActivities } from '../storage'
-import type { ActivityInput, Trip, TripInput } from '../types'
+import { countActivities, countPacked } from '../storage'
+import type { ActivityInput, Trip, TripInput, TripTab } from '../types'
 import { formatTripRange, tripLengthLabel } from '../utils/dates'
 
 interface TripDetailPageProps {
@@ -19,6 +21,10 @@ interface TripDetailPageProps {
     input: ActivityInput,
   ) => void
   onDeleteActivity: (tripId: string, dayId: string, activityId: string) => void
+  onAddPackingItem: (tripId: string, label: string) => void
+  onTogglePackingItem: (tripId: string, itemId: string) => void
+  onRemovePackingItem: (tripId: string, itemId: string) => void
+  onRefreshPacking: (tripId: string) => void
 }
 
 export function TripDetailPage({
@@ -28,15 +34,22 @@ export function TripDetailPage({
   onAddActivity,
   onEditActivity,
   onDeleteActivity,
+  onAddPackingItem,
+  onTogglePackingItem,
+  onRemovePackingItem,
+  onRefreshPacking,
 }: TripDetailPageProps) {
   const { tripId = '' } = useParams()
   const navigate = useNavigate()
   const trip = getTrip(tripId)
   const [editing, setEditing] = useState(false)
+  const [tab, setTab] = useState<TripTab>('itinerary')
 
   if (!trip) {
     return <Navigate to="/trips" replace />
   }
+
+  const bag = countPacked(trip)
 
   return (
     <AppShell>
@@ -49,19 +62,20 @@ export function TripDetailPage({
           <h1>{trip.name}</h1>
           <p className="trip-hero__meta">
             {formatTripRange(trip.startDate, trip.endDate)} ·{' '}
-            {tripLengthLabel(trip)} · {countActivities(trip)} stops
+            {tripLengthLabel(trip)} · {countActivities(trip)} stops ·{' '}
+            {bag.packed}/{bag.total} packed
           </p>
           <div className="trip-hero__actions">
             <button
               type="button"
-              className="btn btn--ghost-light"
+              className="btn btn--hero"
               onClick={() => setEditing((value) => !value)}
             >
               {editing ? 'Close editor' : 'Edit trip'}
             </button>
             <button
               type="button"
-              className="btn btn--ghost-light"
+              className="btn btn--hero"
               onClick={() => {
                 if (
                   window.confirm(
@@ -101,22 +115,69 @@ export function TripDetailPage({
           </div>
         ) : null}
 
-        <div className="day-stack">
-          {trip.days.map((day, index) => (
-            <DaySection
-              key={day.id}
-              day={day}
-              index={index}
-              onAdd={(input) => onAddActivity(trip.id, day.id, input)}
-              onUpdate={(activityId, input) =>
-                onEditActivity(trip.id, day.id, activityId, input)
-              }
-              onDelete={(activityId) =>
-                onDeleteActivity(trip.id, day.id, activityId)
-              }
-            />
+        <div className="trip-tabs" role="tablist" aria-label="Trip sections">
+          {(
+            [
+              ['itinerary', 'Itinerary'],
+              ['packing', 'Packing'],
+              ['suggestions', 'Suggestions'],
+            ] as const
+          ).map(([id, label]) => (
+            <button
+              key={id}
+              type="button"
+              role="tab"
+              aria-selected={tab === id}
+              className={`trip-tabs__btn ${tab === id ? 'is-active' : ''}`}
+              onClick={() => setTab(id)}
+            >
+              {label}
+            </button>
           ))}
         </div>
+
+        {tab === 'itinerary' ? (
+          <div className="day-stack">
+            {trip.days.map((day, index) => (
+              <DaySection
+                key={day.id}
+                day={day}
+                index={index}
+                onAdd={(input) => onAddActivity(trip.id, day.id, input)}
+                onUpdate={(activityId, input) =>
+                  onEditActivity(trip.id, day.id, activityId, input)
+                }
+                onDelete={(activityId) =>
+                  onDeleteActivity(trip.id, day.id, activityId)
+                }
+              />
+            ))}
+          </div>
+        ) : null}
+
+        {tab === 'packing' ? (
+          <PackingList
+            trip={trip}
+            onAdd={(label) => onAddPackingItem(trip.id, label)}
+            onToggle={(itemId) => onTogglePackingItem(trip.id, itemId)}
+            onRemove={(itemId) => onRemovePackingItem(trip.id, itemId)}
+            onRefreshSuggestions={() => onRefreshPacking(trip.id)}
+          />
+        ) : null}
+
+        {tab === 'suggestions' ? (
+          <DestinationSuggestions
+            trip={trip}
+            onAddPlace={(dayId, input) => {
+              onAddActivity(trip.id, dayId, input)
+              setTab('itinerary')
+            }}
+            onAddPacking={(label) => {
+              onAddPackingItem(trip.id, label)
+              setTab('packing')
+            }}
+          />
+        ) : null}
       </div>
     </AppShell>
   )
