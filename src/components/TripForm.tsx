@@ -53,7 +53,7 @@ export function TripForm({
           type="text"
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
-          placeholder="Lisbon long weekend"
+          placeholder="LIS layover long weekend"
           autoFocus
         />
       </label>
@@ -88,7 +88,7 @@ export function TripForm({
       </div>
 
       <fieldset className="tone-picker">
-        <legend>Cover tone</legend>
+        <legend>Cover sky</legend>
         <div className="tone-picker__options">
           {COVER_TONES.map((tone) => (
             <label

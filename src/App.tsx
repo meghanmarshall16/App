@@ -15,6 +15,10 @@ export default function App() {
     createActivity,
     editActivity,
     deleteActivity,
+    createPackingItem,
+    flipPackingItem,
+    deletePackingItem,
+    syncPackingSuggestions,
     getTrip,
   } = useTrips()
 
@@ -37,6 +41,10 @@ export default function App() {
               onAddActivity={createActivity}
               onEditActivity={editActivity}
               onDeleteActivity={deleteActivity}
+              onAddPackingItem={createPackingItem}
+              onTogglePackingItem={flipPackingItem}
+              onRemovePackingItem={deletePackingItem}
+              onRefreshPacking={syncPackingSuggestions}
             />
           }
         />
