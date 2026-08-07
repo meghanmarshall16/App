@@ -360,6 +360,94 @@
   color: var(--white);
 }
 
+/* —— Dogs photo —— */
+.dogs-band {
+  background: var(--white);
+  border-top: 1px solid var(--line);
+  padding: clamp(2rem, 5vw, 3.5rem) clamp(1.25rem, 4vw, 3rem);
+}
+
+.dogs-band__inner {
+  width: min(980px, 100%);
+  margin: 0 auto;
+}
+
+.dogs-photo {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  align-items: center;
+}
+
+.dogs-photo__frame {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  min-height: 280px;
+  background: linear-gradient(160deg, var(--blue-pale), var(--blue));
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.dogs-photo__img {
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  object-fit: cover;
+  display: block;
+}
+
+.dogs-photo__placeholder {
+  min-height: 280px;
+  display: grid;
+  place-content: center;
+  gap: 0.75rem;
+  text-align: center;
+  color: var(--black);
+  padding: 2rem;
+}
+
+.dogs-photo__paws {
+  display: flex;
+  justify-content: center;
+  gap: 0.55rem;
+  color: rgba(17, 17, 17, 0.45);
+}
+
+.dogs-photo__paws svg {
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+.dogs-photo__paws svg:nth-child(2) {
+  transform: translateY(8px) rotate(14deg);
+}
+
+.dogs-photo__placeholder p {
+  margin: 0;
+  font-weight: 600;
+}
+
+.dogs-photo__meta h2 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  text-transform: uppercase;
+}
+
+.dogs-photo__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.25rem;
+}
+
+@media (max-width: 800px) {
+  .dogs-photo {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* —— Pages —— */
 .page {
   width: min(1100px, 100%);

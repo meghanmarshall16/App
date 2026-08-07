@@ -10,14 +10,13 @@ export interface DestinationGuide {
 }
 
 const PILOT_BASE_PACKING = [
-  'Passport / crew ID',
-  'Pilot certificate & medical',
-  'Logbook',
-  'Noise-cancelling headset (if positioning)',
-  'Phone + aviation apps charged',
+  'Passport / ID',
+  'Phone charger + power bank',
   'Universal power adapter',
+  'Medications & basics',
+  'Comfortable walking shoes',
   'Favorite dog photo for the hotel nightstand',
-  'Portable lint roller (uniform + pup hair)',
+  'Portable lint roller (clothes + pup hair)',
 ]
 
 export const DESTINATION_GUIDES: DestinationGuide[] = [
@@ -98,8 +97,8 @@ export const DESTINATION_GUIDES: DestinationGuide[] = [
       },
     ],
     tips: [
-      'HND and NRT both work; factor transfer time into duty-free plans.',
-      'Convenience stores are excellent for quick meals between hops.',
+      'HND and NRT both work; factor transfer time into your plans.',
+      'Convenience stores are excellent for quick meals between adventures.',
       'Trash cans are scarce — pack a small bag for wrappers.',
     ],
   },
@@ -124,7 +123,7 @@ export const DESTINATION_GUIDES: DestinationGuide[] = [
       },
       {
         title: 'Canal Saint-Martin walk',
-        detail: 'Cafés and bridges — good reset after a long sector.',
+        detail: 'Cafés and bridges — a good reset after travel day.',
         category: 'Neighborhood',
       },
       {
@@ -139,7 +138,7 @@ export const DESTINATION_GUIDES: DestinationGuide[] = [
       },
     ],
     tips: [
-      'RER B from CDG is fine with light bags; taxi if you’re short on turn time.',
+      'RER B from CDG is fine with light bags; taxi if you’re short on time.',
       'Many kitchens close mid-afternoon — snack before long museum blocks.',
       'Validate tickets on regional trains before boarding.',
     ],
@@ -165,7 +164,7 @@ export const DESTINATION_GUIDES: DestinationGuide[] = [
       },
       {
         title: 'Brooklyn Bridge at sunrise',
-        detail: 'Quieter light and fewer crowds before briefings.',
+        detail: 'Quieter light and fewer crowds early.',
         category: 'Viewpoint',
       },
       {
@@ -175,12 +174,12 @@ export const DESTINATION_GUIDES: DestinationGuide[] = [
       },
       {
         title: 'Dumbo waterfront',
-        detail: 'Skyline photos and coffee between commitments.',
+        detail: 'Skyline photos and coffee between plans.',
         category: 'Neighborhood',
       },
     ],
     tips: [
-      'Build buffer into JFK/LGA/EWR transfers — traffic is the real METAR.',
+      'Build buffer into airport transfers — traffic is unpredictable.',
       'Tip for sit-down meals; many counters are quick-service.',
       'Download offline maps for subway backups when signal drops.',
     ],
@@ -206,19 +205,19 @@ export const DESTINATION_GUIDES: DestinationGuide[] = [
       },
       {
         title: 'Local seafood market dinner',
-        detail: 'Ask the hotel or crew lounge for the current favorite stall.',
+        detail: 'Ask the hotel for the current favorite stall.',
         category: 'Food',
       },
       {
         title: 'Boat or snorkel half-day',
-        detail: 'Book with cancellation flexibility around duty changes.',
+        detail: 'Book with free cancellation when you can.',
         category: 'Activity',
       },
     ],
     tips: [
-      'Hydrate more than you think on humid layovers.',
+      'Hydrate more than you think in humid weather.',
       'Keep electronics out of direct sun in the bag.',
-      'One wrinkle-resistant dinner outfit covers most resort nights.',
+      'One wrinkle-resistant dinner outfit covers most nights.',
     ],
   },
   {
@@ -237,12 +236,12 @@ export const DESTINATION_GUIDES: DestinationGuide[] = [
     places: [
       {
         title: 'Scenic overlook drive or gondola',
-        detail: 'Easy win when turn time is short.',
+        detail: 'Easy win when you want big views fast.',
         category: 'Viewpoint',
       },
       {
         title: 'Thermal soak or spa hour',
-        detail: 'Recovery after a long duty day in thin air.',
+        detail: 'Recovery after a day in thin air.',
         category: 'Recovery',
       },
       {
@@ -263,7 +262,7 @@ export const GENERIC_GUIDE: DestinationGuide = {
   id: 'generic',
   match: /.*/,
   label: 'Your destination',
-  blurb: 'Solid crew-style packing plus flexible plans you can tighten once you land.',
+  blurb: 'Solid packing basics plus flexible plans you can tighten once you arrive.',
   climate: 'Check the local forecast before you lock layers',
   packing: [
     'Weather-appropriate layers',
@@ -280,7 +279,7 @@ export const GENERIC_GUIDE: DestinationGuide = {
     },
     {
       title: 'One signature local meal',
-      detail: 'Ask hotel staff or other crew for the current favorite.',
+      detail: 'Ask hotel staff for the current favorite.',
       category: 'Food',
     },
     {
@@ -290,9 +289,9 @@ export const GENERIC_GUIDE: DestinationGuide = {
     },
   ],
   tips: [
-    'Keep day one light after a positioning flight.',
+    'Keep day one light after travel day.',
     'Screenshot confirmations in case roaming is spotty.',
-    'Leave one open block for whatever the layover invites.',
+    'Leave one open block for whatever the trip invites.',
   ],
 }
 

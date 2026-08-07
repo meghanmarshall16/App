@@ -17,12 +17,12 @@ export function TripsPage({ trips, onDelete }: TripsPageProps) {
         <header className="page-header">
           <div>
             <p className="eyebrow">
-              <PawIcon className="inline-paw" /> Dispatch board
+              <PawIcon className="inline-paw" /> Your trips
             </p>
             <h1>Trips</h1>
             <p className="page-lede">
-              Every route lives here — open one to shape the days, bag, and
-              briefing.
+              Every getaway lives here — open one to shape the days, packing
+              list, and destination ideas.
             </p>
           </div>
           <Link to="/trips/new" className="btn btn--primary">
@@ -37,13 +37,13 @@ export function TripsPage({ trips, onDelete }: TripsPageProps) {
               <PawIcon />
               <PawIcon />
             </div>
-            <h2>No trips filed</h2>
+            <h2>No trips yet</h2>
             <p>
               Start with a destination and dates. Trip&apos;s Trips builds the
-              days and a packing brief.
+              days and a packing list for you.
             </p>
             <Link to="/trips/new" className="btn btn--primary">
-              File your first trip
+              Plan your first trip
             </Link>
           </div>
         ) : (

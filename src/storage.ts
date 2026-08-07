@@ -80,7 +80,7 @@ function sampleTrip(): Trip {
   const days = buildDays('2026-09-12', '2026-09-15')
   const seeded: Trip = {
     id: uid('trip'),
-    name: 'Lisbon layover long weekend',
+    name: 'Lisbon long weekend',
     destination,
     startDate: '2026-09-12',
     endDate: '2026-09-15',
@@ -97,7 +97,7 @@ function sampleTrip(): Trip {
         time: '10:40',
         location: 'Humberto Delgado Airport',
         category: 'flight',
-        notes: 'Positioning into LIS · metro card at arrivals',
+        notes: 'Arrive LIS · metro card at arrivals',
       },
       {
         title: 'Check in at Santa Clara loft',

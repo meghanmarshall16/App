@@ -33,11 +33,11 @@ export function PackingList({
       <header className="panel-block__header">
         <div>
           <p className="eyebrow">
-            <PawIcon className="inline-paw" /> Before pushback
+            <PawIcon className="inline-paw" /> Packing list
           </p>
-          <h2>Packing list</h2>
+          <h2>What to pack</h2>
           <p className="page-lede">
-            Crew essentials plus gear matched to {trip.destination}.{' '}
+            Travel essentials plus gear matched to {trip.destination}.{' '}
             {total === 0
               ? 'Add your first item.'
               : `${packed} of ${total} packed.`}
