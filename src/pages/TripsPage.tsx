@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { AppShell } from '../components/AppShell'
+import { PawIcon } from '../components/Icons'
 import { countActivities, countPacked } from '../storage'
 import type { Trip } from '../types'
 import { formatTripRange, tripLengthLabel } from '../utils/dates'
@@ -15,7 +16,9 @@ export function TripsPage({ trips, onDelete }: TripsPageProps) {
       <div className="page">
         <header className="page-header">
           <div>
-            <p className="eyebrow">Dispatch board</p>
+            <p className="eyebrow">
+              <PawIcon className="inline-paw" /> Dispatch board
+            </p>
             <h1>Trips</h1>
             <p className="page-lede">
               Every route lives here — open one to shape the days, bag, and
@@ -29,6 +32,11 @@ export function TripsPage({ trips, onDelete }: TripsPageProps) {
 
         {trips.length === 0 ? (
           <div className="empty-state">
+            <div className="empty-state__icons" aria-hidden="true">
+              <PawIcon />
+              <PawIcon />
+              <PawIcon />
+            </div>
             <h2>No trips filed</h2>
             <p>
               Start with a destination and dates. Trip&apos;s Trips builds the
@@ -50,6 +58,7 @@ export function TripsPage({ trips, onDelete }: TripsPageProps) {
                 >
                   <Link to={`/trips/${trip.id}`} className="trip-tile__link">
                     <div className="trip-tile__glow" aria-hidden="true" />
+                    <PawIcon className="trip-tile__paw" />
                     <p className="trip-tile__destination">{trip.destination}</p>
                     <h2>{trip.name}</h2>
                     <p className="trip-tile__meta">

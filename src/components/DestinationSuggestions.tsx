@@ -1,5 +1,6 @@
 import { findDestinationGuide } from '../suggestions'
 import type { ActivityInput, Trip } from '../types'
+import { PawIcon } from './Icons'
 
 interface DestinationSuggestionsProps {
   trip: Trip
@@ -21,7 +22,9 @@ export function DestinationSuggestions({
   return (
     <section className="panel-block">
       <header className="panel-block__header panel-block__header--stack">
-        <p className="eyebrow">Destination brief</p>
+        <p className="eyebrow">
+          <PawIcon className="inline-paw" /> Destination brief
+        </p>
         <h2>{guide.label}</h2>
         <p className="page-lede">{guide.blurb}</p>
         <p className="climate-chip">{guide.climate}</p>
@@ -33,7 +36,9 @@ export function DestinationSuggestions({
           <ul className="suggest-list">
             {guide.places.map((place) => (
               <li key={place.title} className="suggest-card">
-                <p className="suggest-card__cat">{place.category}</p>
+                <p className="suggest-card__cat">
+                  <PawIcon className="inline-paw" /> {place.category}
+                </p>
                 <h4>{place.title}</h4>
                 <p>{place.detail}</p>
                 {firstDayId ? (

@@ -40,7 +40,7 @@ export interface Trip {
   createdAt: string
 }
 
-export type CoverTone = 'sky' | 'runway' | 'dusk' | 'fog'
+export type CoverTone = 'sky' | 'cloud' | 'ink' | 'mist'
 
 export interface TripInput {
   name: string
@@ -69,9 +69,9 @@ export const CATEGORY_LABELS: Record<ActivityCategory, string> = {
 
 export const COVER_TONES: { id: CoverTone; label: string }[] = [
   { id: 'sky', label: 'Sky' },
-  { id: 'runway', label: 'Runway' },
-  { id: 'dusk', label: 'Dusk' },
-  { id: 'fog', label: 'Fog' },
+  { id: 'cloud', label: 'Cloud' },
+  { id: 'ink', label: 'Ink' },
+  { id: 'mist', label: 'Mist' },
 ]
 
 export type TripTab = 'itinerary' | 'packing' | 'suggestions'

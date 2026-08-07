@@ -16,7 +16,8 @@ const PILOT_BASE_PACKING = [
   'Noise-cancelling headset (if positioning)',
   'Phone + aviation apps charged',
   'Universal power adapter',
-  'Compact toiletry kit',
+  'Favorite dog photo for the hotel nightstand',
+  'Portable lint roller (uniform + pup hair)',
 ]
 
 export const DESTINATION_GUIDES: DestinationGuide[] = [

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { countPacked } from '../storage'
 import type { Trip } from '../types'
+import { PawIcon } from './Icons'
 
 interface PackingListProps {
   trip: Trip
@@ -31,7 +32,9 @@ export function PackingList({
     <section className="panel-block">
       <header className="panel-block__header">
         <div>
-          <p className="eyebrow">Before pushback</p>
+          <p className="eyebrow">
+            <PawIcon className="inline-paw" /> Before pushback
+          </p>
           <h2>Packing list</h2>
           <p className="page-lede">
             Crew essentials plus gear matched to {trip.destination}.{' '}

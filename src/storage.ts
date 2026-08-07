@@ -64,7 +64,7 @@ export function buildPackingList(
 function normalizeTrip(raw: Trip): Trip {
   return {
     ...raw,
-    coverTone: (['sky', 'runway', 'dusk', 'fog'] as CoverTone[]).includes(
+    coverTone: (['sky', 'cloud', 'ink', 'mist'] as CoverTone[]).includes(
       raw.coverTone,
     )
       ? raw.coverTone

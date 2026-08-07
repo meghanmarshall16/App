@@ -68,14 +68,14 @@ export function TripDetailPage({
           <div className="trip-hero__actions">
             <button
               type="button"
-              className="btn btn--ghost-light"
+              className="btn btn--hero"
               onClick={() => setEditing((value) => !value)}
             >
               {editing ? 'Close editor' : 'Edit trip'}
             </button>
             <button
               type="button"
-              className="btn btn--ghost-light"
+              className="btn btn--hero"
               onClick={() => {
                 if (
                   window.confirm(
