@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 const STORAGE_KEY = 'trips-trips.dogs-photo'
+export const DEFAULT_DOGS_PHOTO = '/dogs.jpg'
 
 export function useDogPhoto() {
   const [photo, setPhoto] = useState<string | null>(() => {
@@ -10,6 +11,27 @@ export function useDogPhoto() {
       return null
     }
   })
+  const [usingDefault, setUsingDefault] = useState(false)
+
+  useEffect(() => {
+    if (photo) {
+      setUsingDefault(false)
+      return
+    }
+
+    let cancelled = false
+    fetch(DEFAULT_DOGS_PHOTO, { method: 'HEAD' })
+      .then((response) => {
+        if (!cancelled && response.ok) setUsingDefault(true)
+      })
+      .catch(() => {
+        if (!cancelled) setUsingDefault(false)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [photo])
 
   useEffect(() => {
     try {
@@ -31,7 +53,10 @@ export function useDogPhoto() {
 
   function clear() {
     setPhoto(null)
+    setUsingDefault(false)
   }
 
-  return { photo, saveFromFile, clear }
+  const displayPhoto = photo ?? (usingDefault ? DEFAULT_DOGS_PHOTO : null)
+
+  return { photo: displayPhoto, saveFromFile, clear, isCustom: Boolean(photo) }
 }

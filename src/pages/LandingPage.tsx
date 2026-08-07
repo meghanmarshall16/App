@@ -5,7 +5,7 @@ import { PawIcon, PlaneIcon } from '../components/Icons'
 import { useDogPhoto } from '../hooks/useDogPhoto'
 
 export function LandingPage() {
-  const { photo, saveFromFile, clear } = useDogPhoto()
+  const { photo, saveFromFile, clear, isCustom } = useDogPhoto()
 
   return (
     <AppShell transparent>
@@ -48,6 +48,7 @@ export function LandingPage() {
             photo={photo}
             onSelect={saveFromFile}
             onClear={clear}
+            isCustom={isCustom}
           />
         </div>
       </section>
