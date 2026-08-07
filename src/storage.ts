@@ -1,7 +1,17 @@
 import { eachDayOfInterval, format, parseISO } from 'date-fns'
-import type { Activity, ActivityInput, CoverTone, Trip, TripDay, TripInput } from './types'
+import { packingSuggestionsFor } from './suggestions'
+import type {
+  Activity,
+  ActivityInput,
+  CoverTone,
+  PackingItem,
+  Trip,
+  TripDay,
+  TripInput,
+} from './types'
 
-const STORAGE_KEY = 'waymark.trips.v1'
+const STORAGE_KEY = 'trips-trips.v1'
+const LEGACY_KEY = 'waymark.trips.v1'
 
 function uid(prefix: string): string {
   return `${prefix}_${crypto.randomUUID().slice(0, 8)}`
@@ -21,17 +31,63 @@ export function buildDays(startDate: string, endDate: string): TripDay[] {
   }))
 }
 
+export function buildPackingList(
+  destination: string,
+  existing: PackingItem[] = [],
+): PackingItem[] {
+  const suggested = packingSuggestionsFor(destination)
+  const byLabel = new Map(
+    existing.map((item) => [item.label.toLowerCase(), item]),
+  )
+
+  const fromSuggestions = suggested.map((label) => {
+    const prior = byLabel.get(label.toLowerCase())
+    if (prior) {
+      byLabel.delete(label.toLowerCase())
+      return { ...prior, source: 'suggested' as const }
+    }
+    return {
+      id: uid('pack'),
+      label,
+      packed: false,
+      source: 'suggested' as const,
+    }
+  })
+
+  const customRemainder = [...byLabel.values()].filter(
+    (item) => item.source === 'custom' || !suggested.includes(item.label),
+  )
+
+  return [...fromSuggestions, ...customRemainder]
+}
+
+function normalizeTrip(raw: Trip): Trip {
+  return {
+    ...raw,
+    coverTone: (['sky', 'runway', 'dusk', 'fog'] as CoverTone[]).includes(
+      raw.coverTone,
+    )
+      ? raw.coverTone
+      : 'sky',
+    packingList: Array.isArray(raw.packingList)
+      ? raw.packingList
+      : buildPackingList(raw.destination),
+  }
+}
+
 function sampleTrip(): Trip {
+  const destination = 'Lisbon, Portugal'
   const days = buildDays('2026-09-12', '2026-09-15')
   const seeded: Trip = {
     id: uid('trip'),
-    name: 'Lisbon long weekend',
-    destination: 'Lisbon, Portugal',
+    name: 'Lisbon layover long weekend',
+    destination,
     startDate: '2026-09-12',
     endDate: '2026-09-15',
-    coverTone: 'ocean',
+    coverTone: 'sky',
     createdAt: new Date().toISOString(),
     days,
+    packingList: buildPackingList(destination),
   }
 
   const plan: Record<number, ActivityInput[]> = {
@@ -41,7 +97,7 @@ function sampleTrip(): Trip {
         time: '10:40',
         location: 'Humberto Delgado Airport',
         category: 'flight',
-        notes: 'TAP TP1204 · pick up metro card at arrivals',
+        notes: 'Positioning into LIS · metro card at arrivals',
       },
       {
         title: 'Check in at Santa Clara loft',
@@ -55,7 +111,7 @@ function sampleTrip(): Trip {
         time: '18:30',
         location: 'Graça',
         category: 'activity',
-        notes: 'Walk up from the loft · bring a light jacket',
+        notes: 'Walk up from the loft · light jacket',
       },
     ],
     1: [
@@ -94,7 +150,7 @@ function sampleTrip(): Trip {
         time: '20:00',
         location: 'Cais do Sodré',
         category: 'food',
-        notes: 'Try the seafood stall near the center aisle',
+        notes: 'Seafood stall near the center aisle',
       },
     ],
     3: [
@@ -103,14 +159,14 @@ function sampleTrip(): Trip {
         time: '09:30',
         location: 'Alcântara',
         category: 'activity',
-        notes: 'Bookstore + coffee before packing',
+        notes: 'Bookstore + coffee before packing up',
       },
       {
         title: 'Depart LIS',
         time: '16:15',
         location: 'Humberto Delgado Airport',
         category: 'flight',
-        notes: 'Arrive 2 hours early · metro to Aeroporto stop',
+        notes: 'Arrive 2 hours early · metro to Aeroporto',
       },
     ],
   }
@@ -128,14 +184,18 @@ function sampleTrip(): Trip {
 
 export function loadTrips(): Trip[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const raw =
+      localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem(LEGACY_KEY)
     if (!raw) {
       const seed = [sampleTrip()]
       localStorage.setItem(STORAGE_KEY, JSON.stringify(seed))
       return seed
     }
     const parsed = JSON.parse(raw) as Trip[]
-    return Array.isArray(parsed) ? parsed : []
+    if (!Array.isArray(parsed)) return []
+    const normalized = parsed.map(normalizeTrip)
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized))
+    return normalized
   } catch {
     return []
   }
@@ -146,48 +206,58 @@ export function saveTrips(trips: Trip[]): void {
 }
 
 export function createTrip(input: TripInput): Trip {
+  const destination = input.destination.trim()
   return {
     id: uid('trip'),
     name: input.name.trim(),
-    destination: input.destination.trim(),
+    destination,
     startDate: input.startDate,
     endDate: input.endDate,
     coverTone: input.coverTone,
     createdAt: new Date().toISOString(),
     days: buildDays(input.startDate, input.endDate),
+    packingList: buildPackingList(destination),
   }
 }
 
-export function updateTripMeta(
-  trip: Trip,
-  input: TripInput,
-): Trip {
+export function updateTripMeta(trip: Trip, input: TripInput): Trip {
   const sameRange =
     trip.startDate === input.startDate && trip.endDate === input.endDate
+  const destination = input.destination.trim()
+  const destinationChanged =
+    destination.toLowerCase() !== trip.destination.toLowerCase()
 
-  if (sameRange) {
-    return {
-      ...trip,
-      name: input.name.trim(),
-      destination: input.destination.trim(),
-      coverTone: input.coverTone,
-    }
-  }
+  const base: Trip = sameRange
+    ? {
+        ...trip,
+        name: input.name.trim(),
+        destination,
+        coverTone: input.coverTone,
+      }
+    : (() => {
+        const nextDays = buildDays(input.startDate, input.endDate)
+        const byDate = new Map(
+          trip.days.map((day) => [day.date, day.activities]),
+        )
+        return {
+          ...trip,
+          name: input.name.trim(),
+          destination,
+          startDate: input.startDate,
+          endDate: input.endDate,
+          coverTone: input.coverTone,
+          days: nextDays.map((day) => ({
+            ...day,
+            activities: byDate.get(day.date) ?? [],
+          })),
+        }
+      })()
 
-  const nextDays = buildDays(input.startDate, input.endDate)
-  const byDate = new Map(trip.days.map((day) => [day.date, day.activities]))
+  if (!destinationChanged) return base
 
   return {
-    ...trip,
-    name: input.name.trim(),
-    destination: input.destination.trim(),
-    startDate: input.startDate,
-    endDate: input.endDate,
-    coverTone: input.coverTone,
-    days: nextDays.map((day) => ({
-      ...day,
-      activities: byDate.get(day.date) ?? [],
-    })),
+    ...base,
+    packingList: buildPackingList(destination, trip.packingList),
   }
 }
 
@@ -247,10 +317,64 @@ export function removeActivity(
   }
 }
 
+export function addPackingItem(trip: Trip, label: string): Trip {
+  const trimmed = label.trim()
+  if (!trimmed) return trip
+  if (
+    trip.packingList.some(
+      (item) => item.label.toLowerCase() === trimmed.toLowerCase(),
+    )
+  ) {
+    return trip
+  }
+
+  return {
+    ...trip,
+    packingList: [
+      ...trip.packingList,
+      {
+        id: uid('pack'),
+        label: trimmed,
+        packed: false,
+        source: 'custom',
+      },
+    ],
+  }
+}
+
+export function togglePackingItem(trip: Trip, itemId: string): Trip {
+  return {
+    ...trip,
+    packingList: trip.packingList.map((item) =>
+      item.id === itemId ? { ...item, packed: !item.packed } : item,
+    ),
+  }
+}
+
+export function removePackingItem(trip: Trip, itemId: string): Trip {
+  return {
+    ...trip,
+    packingList: trip.packingList.filter((item) => item.id !== itemId),
+  }
+}
+
+export function refreshPackingSuggestions(trip: Trip): Trip {
+  return {
+    ...trip,
+    packingList: buildPackingList(trip.destination, trip.packingList),
+  }
+}
+
 export function countActivities(trip: Trip): number {
   return trip.days.reduce((sum, day) => sum + day.activities.length, 0)
 }
 
+export function countPacked(trip: Trip): { packed: number; total: number } {
+  const total = trip.packingList.length
+  const packed = trip.packingList.filter((item) => item.packed).length
+  return { packed, total }
+}
+
 export function defaultCoverTone(): CoverTone {
-  return 'ocean'
+  return 'sky'
 }

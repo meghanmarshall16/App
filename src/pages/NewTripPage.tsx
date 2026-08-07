@@ -14,10 +14,11 @@ export function NewTripPage({ onCreate }: NewTripPageProps) {
     <AppShell>
       <div className="page page--narrow">
         <header className="page-header page-header--stack">
-          <p className="eyebrow">New journey</p>
-          <h1>Plan a trip</h1>
+          <p className="eyebrow">New flight plan</p>
+          <h1>File a trip</h1>
           <p className="page-lede">
-            Name the place, set the dates, and Waymark lays out each day for you.
+            Name the route, set the dates, and we&apos;ll build days, packing
+            suggestions, and a destination briefing.
           </p>
         </header>
         <TripForm

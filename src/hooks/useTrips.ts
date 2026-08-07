@@ -2,10 +2,14 @@ import { useCallback, useEffect, useState } from 'react'
 import type { ActivityInput, Trip, TripInput } from '../types'
 import {
   addActivity,
+  addPackingItem,
   createTrip,
   loadTrips,
+  refreshPackingSuggestions,
   removeActivity,
+  removePackingItem,
   saveTrips,
+  togglePackingItem,
   updateActivity,
   updateTripMeta,
 } from '../storage'
@@ -77,6 +81,38 @@ export function useTrips() {
     [],
   )
 
+  const createPackingItem = useCallback((tripId: string, label: string) => {
+    setTrips((current) =>
+      current.map((trip) =>
+        trip.id === tripId ? addPackingItem(trip, label) : trip,
+      ),
+    )
+  }, [])
+
+  const flipPackingItem = useCallback((tripId: string, itemId: string) => {
+    setTrips((current) =>
+      current.map((trip) =>
+        trip.id === tripId ? togglePackingItem(trip, itemId) : trip,
+      ),
+    )
+  }, [])
+
+  const deletePackingItem = useCallback((tripId: string, itemId: string) => {
+    setTrips((current) =>
+      current.map((trip) =>
+        trip.id === tripId ? removePackingItem(trip, itemId) : trip,
+      ),
+    )
+  }, [])
+
+  const syncPackingSuggestions = useCallback((tripId: string) => {
+    setTrips((current) =>
+      current.map((trip) =>
+        trip.id === tripId ? refreshPackingSuggestions(trip) : trip,
+      ),
+    )
+  }, [])
+
   const getTrip = useCallback(
     (tripId: string) => trips.find((trip) => trip.id === tripId),
     [trips],
@@ -90,6 +126,10 @@ export function useTrips() {
     createActivity,
     editActivity,
     deleteActivity,
+    createPackingItem,
+    flipPackingItem,
+    deletePackingItem,
+    syncPackingSuggestions,
     getTrip,
   }
 }
