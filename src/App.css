@@ -114,7 +114,7 @@
   display: inline-flex;
   align-items: center;
   padding: 0.55rem 0.95rem;
-  border-radius: 999px;
+  border-radius: 10px;
   background: var(--ocean);
   color: #f7fbfd;
   font-size: 0.88rem;
@@ -133,7 +133,7 @@
   gap: 0.4rem;
   border: 0;
   cursor: pointer;
-  border-radius: 999px;
+  border-radius: 10px;
   padding: 0.7rem 1.15rem;
   font-weight: 600;
   font-size: 0.92rem;
@@ -417,7 +417,9 @@
 }
 
 .trip-tile--sunset .trip-tile__glow {
-  background: linear-gradient(160deg, #8b3a2f, #d96b4c 55%, #e8a317);
+  background:
+    linear-gradient(90deg, rgba(74, 28, 22, 0.45), transparent 70%),
+    linear-gradient(160deg, #8b3a2f, #d96b4c 55%, #e8a317);
 }
 
 .trip-tile--forest .trip-tile__glow {
@@ -468,7 +470,7 @@
   border: 0;
   background: rgba(8, 52, 79, 0.35);
   color: #f7fbfd;
-  border-radius: 999px;
+  border-radius: 8px;
   padding: 0.35rem 0.7rem;
   font-size: 0.75rem;
   font-weight: 600;
@@ -497,6 +499,7 @@
 
 .trip-hero--sunset {
   background:
+    linear-gradient(90deg, rgba(74, 28, 22, 0.72) 0%, rgba(74, 28, 22, 0.25) 55%, transparent 100%),
     radial-gradient(700px 280px at 80% 0%, rgba(232, 163, 23, 0.4), transparent 50%),
     linear-gradient(145deg, #6f2d24, #d96b4c 55%, #e8a317);
 }
