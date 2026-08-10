@@ -1,9 +1,11 @@
 import { useId, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AppShell } from '../components/AppShell'
+import { CloudSyncPanel } from '../components/CloudSyncPanel'
 import { PawIcon } from '../components/Icons'
 import { countActivities, countPacked } from '../storage'
 import type { Trip } from '../types'
+import type { SyncStatus } from '../utils/cloudSync'
 import { formatTripRange, tripLengthLabel } from '../utils/dates'
 import {
   buildShareUrl,
@@ -18,11 +20,29 @@ interface TripsPageProps {
   trips: Trip[]
   onDelete: (tripId: string) => void
   onImport: (trips: Trip[]) => number
+  cloudReady: boolean
+  spaceId: string | null
+  syncStatus: SyncStatus
+  syncError: string | null
+  onStartCloud: () => Promise<string>
+  onJoinCloud: (code: string) => Promise<string>
+  onDisconnectCloud: () => void
 }
 
 type ShareFeedback = { tone: 'ok' | 'error' | 'info'; text: string } | null
 
-export function TripsPage({ trips, onDelete, onImport }: TripsPageProps) {
+export function TripsPage({
+  trips,
+  onDelete,
+  onImport,
+  cloudReady,
+  spaceId,
+  syncStatus,
+  syncError,
+  onStartCloud,
+  onJoinCloud,
+  onDisconnectCloud,
+}: TripsPageProps) {
   const fileInputId = useId()
   const [busy, setBusy] = useState(false)
   const [feedback, setFeedback] = useState<ShareFeedback>(null)
@@ -129,12 +149,22 @@ export function TripsPage({ trips, onDelete, onImport }: TripsPageProps) {
           </Link>
         </header>
 
+        <CloudSyncPanel
+          cloudReady={cloudReady}
+          spaceId={spaceId}
+          syncStatus={syncStatus}
+          syncError={syncError}
+          onCreate={onStartCloud}
+          onJoin={onJoinCloud}
+          onDisconnect={onDisconnectCloud}
+        />
+
         <section className="share-panel share-panel--banner" aria-labelledby="share-heading">
           <div>
-            <h2 id="share-heading">Share with your partner</h2>
+            <h2 id="share-heading">One-time share</h2>
             <p>
-              Trips stay on this phone until you send them. Copy a link, or
-              download a file — then share again anytime you change the plans.
+              Prefer a snapshot instead of live sync? Copy a link or download a
+              file. Re-share after you change plans.
             </p>
           </div>
           <div className="share-panel__actions">

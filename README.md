@@ -9,8 +9,9 @@ A personal travel itinerary app: day-by-day plans, packing lists, calendar view,
 - Day-by-day itinerary from your date range
 - Packing lists with destination-based packing items
 - Upload a photo of your dogs on the home page
-- Data saved in your browser (`localStorage`)
-- Share trips with a partner via link or downloadable file
+- Local backup in your browser (`localStorage`)
+- **Cloud sync** so everyone with your space code sees live updates
+- One-time share via link or downloadable file
 
 ## Get started
 
@@ -23,15 +24,29 @@ npm run dev
 
 Open the local URL Vite prints (usually `http://localhost:5173`).
 
-## Share trips with a partner
+## Cloud sync (updates for anyone)
 
-Trips live in each browser until you send them:
+Browser storage only lives on one phone. For live shared trips:
+
+1. Create a free project at [supabase.com](https://supabase.com)
+2. In **SQL Editor**, run `supabase/schema.sql`
+3. Copy **Project URL** and **anon public** key from **Project Settings → API**
+4. Add them as env vars (local `.env.local` and Vercel → Settings → Environment Variables):
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+5. Redeploy on Vercel
+6. In the app: **Trips → Start cloud sync** → send the space code to your partner
+7. Partner opens the same app → **Join with a code**
+
+Treat the space code like a shared password.
+
+## One-time share
+
+Without cloud sync, you can still send a snapshot:
 
 1. Open **Trips** → **Copy share link** (or **Download trips file**)
 2. Send that to your partner
 3. They open the link (or **Import trips** and upload/paste)
-
-Share again whenever you change plans. Matching trip IDs update on import instead of duplicating.
 
 ## Scripts
 

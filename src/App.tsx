@@ -10,6 +10,13 @@ import './App.css'
 export default function App() {
   const {
     trips,
+    spaceId,
+    syncStatus,
+    syncError,
+    cloudReady,
+    startCloudSpace,
+    connectCloudSpace,
+    disconnectCloudSpace,
     addTrip,
     editTrip,
     deleteTrip,
@@ -35,6 +42,13 @@ export default function App() {
               trips={trips}
               onDelete={deleteTrip}
               onImport={importIncomingTrips}
+              cloudReady={cloudReady}
+              spaceId={spaceId}
+              syncStatus={syncStatus}
+              syncError={syncError}
+              onStartCloud={startCloudSpace}
+              onJoinCloud={connectCloudSpace}
+              onDisconnectCloud={disconnectCloudSpace}
             />
           }
         />
