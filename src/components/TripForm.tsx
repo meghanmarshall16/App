@@ -53,7 +53,7 @@ export function TripForm({
           type="text"
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
-          placeholder="LIS layover long weekend"
+          placeholder="Lisbon long weekend"
           autoFocus
         />
       </label>

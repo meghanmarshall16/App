@@ -1,8 +1,12 @@
 import { Link } from 'react-router-dom'
 import { AppShell } from '../components/AppShell'
+import { DogsPhoto } from '../components/DogsPhoto'
 import { PawIcon, PlaneIcon } from '../components/Icons'
+import { useDogPhoto } from '../hooks/useDogPhoto'
 
 export function LandingPage() {
+  const { photo, saveFromFile, clear, isCustom } = useDogPhoto()
+
   return (
     <AppShell transparent>
       <section className="hero">
@@ -22,20 +26,30 @@ export function LandingPage() {
             Trip&apos;s Trips
             <PawIcon className="hero__brand-paw" />
           </p>
-          <h1 className="hero__headline">Flight plan for every layover.</h1>
+          <h1 className="hero__headline">Personal travel, planned your way.</h1>
           <p className="hero__lede">
-            Built for a pilot&apos;s calendar — day-by-day itineraries, packing
-            lists, and destination briefings before you land. Paw prints
-            welcome aboard.
+            Day-by-day itineraries, packing lists, and destination ideas for
+            trips off the clock — with the dogs along for the branding.
           </p>
           <div className="hero__actions">
             <Link to="/trips" className="btn btn--primary btn--large">
               Open my trips
             </Link>
             <Link to="/trips/new" className="btn btn--ghost btn--large">
-              File a new trip
+              Plan a new trip
             </Link>
           </div>
+        </div>
+      </section>
+
+      <section className="dogs-band">
+        <div className="dogs-band__inner">
+          <DogsPhoto
+            photo={photo}
+            onSelect={saveFromFile}
+            onClear={clear}
+            isCustom={isCustom}
+          />
         </div>
       </section>
     </AppShell>

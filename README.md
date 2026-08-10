@@ -1,13 +1,14 @@
 # Trip's Trips
 
-A pilot-friendly travel itinerary app: day-by-day plans, packing lists, and destination briefings.
+A personal travel itinerary app: day-by-day plans, packing lists, destination ideas, and a spot for your dogs' photo.
 
 ## Features
 
-- Create trips with destination, dates, and a sky cover tone
+- Create trips with destination, dates, and a cover tone
 - Day-by-day itinerary from your date range
-- Packing lists with crew essentials and destination-based suggestions
+- Packing lists with destination-based suggestions
 - Destination suggestions for places, tips, and packing
+- Upload a photo of your dogs on the home page
 - Data saved in your browser (`localStorage`)
 
 ## Get started
