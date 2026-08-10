@@ -791,6 +791,148 @@
   color: var(--white);
 }
 
+.trip-calendar {
+  animation: riseIn 650ms ease both;
+}
+
+.trip-calendar__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.trip-calendar__header h2 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  text-transform: uppercase;
+}
+
+.trip-calendar__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.cal-grid__weekday {
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding: 0.35rem 0;
+}
+
+.cal-day {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  min-height: 74px;
+  padding: 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.65);
+  color: var(--ink-soft);
+  text-align: left;
+  cursor: default;
+}
+
+.cal-day--outside {
+  opacity: 0.4;
+}
+
+.cal-day--trip {
+  background: var(--blue-pale);
+  color: var(--black);
+  border-color: rgba(90, 159, 208, 0.45);
+  cursor: pointer;
+}
+
+.cal-day--trip:hover {
+  transform: translateY(-1px);
+  background: #cfe6f5;
+}
+
+.cal-day--filled {
+  background: linear-gradient(160deg, #d7ebf7, #7eb8e0);
+}
+
+.cal-day--selected {
+  border-color: var(--black);
+  box-shadow: 0 0 0 2px rgba(17, 17, 17, 0.12);
+}
+
+.cal-day:disabled {
+  cursor: default;
+}
+
+.cal-day__number {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.cal-day__meta {
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.cal-day__dots {
+  display: flex;
+  gap: 0.2rem;
+  margin-top: auto;
+}
+
+.cal-day__dots i {
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background: var(--black);
+  display: block;
+}
+
+.cal-selected {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.cal-selected__summary {
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.cal-selected__summary h3 {
+  margin: 0 0 0.45rem;
+  font-family: var(--display);
+  font-size: 1.35rem;
+  text-transform: uppercase;
+}
+
+.cal-selected__summary p,
+.cal-selected__summary ul {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.cal-selected__summary ul {
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.3rem;
+}
+
 .editor-panel {
   margin-bottom: 2rem;
   padding: 1.25rem;
@@ -1290,9 +1432,19 @@
 
 @media (max-width: 720px) {
   .page-header,
-  .panel-block__header {
+  .panel-block__header,
+  .trip-calendar__header {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .cal-day {
+    min-height: 64px;
+    padding: 0.4rem;
+  }
+
+  .cal-day__meta {
+    font-size: 0.6rem;
   }
 
   .field-row,

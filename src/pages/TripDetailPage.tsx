@@ -1,9 +1,16 @@
-import { useState } from 'react'
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import {
+  Link,
+  Navigate,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom'
 import { AppShell } from '../components/AppShell'
 import { DaySection } from '../components/DaySection'
 import { DestinationSuggestions } from '../components/DestinationSuggestions'
 import { PackingList } from '../components/PackingList'
+import { TripCalendar } from '../components/TripCalendar'
 import { TripForm } from '../components/TripForm'
 import { countActivities, countPacked } from '../storage'
 import type { ActivityInput, Trip, TripInput, TripTab } from '../types'
@@ -27,6 +34,18 @@ interface TripDetailPageProps {
   onRefreshPacking: (tripId: string) => void
 }
 
+function parseTab(value: string | null): TripTab {
+  if (
+    value === 'calendar' ||
+    value === 'itinerary' ||
+    value === 'packing' ||
+    value === 'suggestions'
+  ) {
+    return value
+  }
+  return 'itinerary'
+}
+
 export function TripDetailPage({
   getTrip,
   onEdit,
@@ -40,16 +59,26 @@ export function TripDetailPage({
   onRefreshPacking,
 }: TripDetailPageProps) {
   const { tripId = '' } = useParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const trip = getTrip(tripId)
   const [editing, setEditing] = useState(false)
-  const [tab, setTab] = useState<TripTab>('itinerary')
+  const [tab, setTab] = useState<TripTab>(() => parseTab(searchParams.get('tab')))
+
+  useEffect(() => {
+    setTab(parseTab(searchParams.get('tab')))
+  }, [searchParams])
 
   if (!trip) {
     return <Navigate to="/trips" replace />
   }
 
   const bag = countPacked(trip)
+
+  function selectTab(next: TripTab) {
+    setTab(next)
+    setSearchParams(next === 'itinerary' ? {} : { tab: next }, { replace: true })
+  }
 
   return (
     <AppShell>
@@ -118,6 +147,7 @@ export function TripDetailPage({
         <div className="trip-tabs" role="tablist" aria-label="Trip sections">
           {(
             [
+              ['calendar', 'Calendar'],
               ['itinerary', 'Itinerary'],
               ['packing', 'Packing'],
               ['suggestions', 'Suggestions'],
@@ -129,12 +159,25 @@ export function TripDetailPage({
               role="tab"
               aria-selected={tab === id}
               className={`trip-tabs__btn ${tab === id ? 'is-active' : ''}`}
-              onClick={() => setTab(id)}
+              onClick={() => selectTab(id)}
             >
               {label}
             </button>
           ))}
         </div>
+
+        {tab === 'calendar' ? (
+          <TripCalendar
+            trip={trip}
+            onAdd={(dayId, input) => onAddActivity(trip.id, dayId, input)}
+            onUpdate={(dayId, activityId, input) =>
+              onEditActivity(trip.id, dayId, activityId, input)
+            }
+            onDelete={(dayId, activityId) =>
+              onDeleteActivity(trip.id, dayId, activityId)
+            }
+          />
+        ) : null}
 
         {tab === 'itinerary' ? (
           <div className="day-stack">
@@ -170,11 +213,11 @@ export function TripDetailPage({
             trip={trip}
             onAddPlace={(dayId, input) => {
               onAddActivity(trip.id, dayId, input)
-              setTab('itinerary')
+              selectTab('itinerary')
             }}
             onAddPacking={(label) => {
               onAddPackingItem(trip.id, label)
-              setTab('packing')
+              selectTab('packing')
             }}
           />
         ) : null}
