@@ -1,16 +1,135 @@
+import { useId, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AppShell } from '../components/AppShell'
+import { CloudSyncPanel } from '../components/CloudSyncPanel'
 import { PawIcon } from '../components/Icons'
 import { countActivities, countPacked } from '../storage'
 import type { Trip } from '../types'
+import type { SyncStatus } from '../utils/cloudSync'
 import { formatTripRange, tripLengthLabel } from '../utils/dates'
+import {
+  buildShareUrl,
+  copyText,
+  decodeShareToken,
+  downloadTripsFile,
+  encodeShareToken,
+  parseExportFile,
+} from '../utils/tripShare'
 
 interface TripsPageProps {
   trips: Trip[]
   onDelete: (tripId: string) => void
+  onImport: (trips: Trip[]) => number
+  cloudReady: boolean
+  spaceId: string | null
+  syncStatus: SyncStatus
+  syncError: string | null
+  onStartCloud: () => Promise<string>
+  onJoinCloud: (code: string) => Promise<string>
+  onDisconnectCloud: () => void
 }
 
-export function TripsPage({ trips, onDelete }: TripsPageProps) {
+type ShareFeedback = { tone: 'ok' | 'error' | 'info'; text: string } | null
+
+export function TripsPage({
+  trips,
+  onDelete,
+  onImport,
+  cloudReady,
+  spaceId,
+  syncStatus,
+  syncError,
+  onStartCloud,
+  onJoinCloud,
+  onDisconnectCloud,
+}: TripsPageProps) {
+  const fileInputId = useId()
+  const [busy, setBusy] = useState(false)
+  const [feedback, setFeedback] = useState<ShareFeedback>(null)
+  const [manualLink, setManualLink] = useState<string | null>(null)
+
+  async function handleCopyShareLink() {
+    if (trips.length === 0) {
+      setFeedback({ tone: 'error', text: 'Add a trip before sharing.' })
+      return
+    }
+    setBusy(true)
+    setManualLink(null)
+    setFeedback({ tone: 'info', text: 'Building a share link…' })
+    try {
+      const token = await encodeShareToken(trips)
+      const url = buildShareUrl(token)
+      const payload = url.length > 12000 ? token : url
+      const copied = await copyText(payload)
+      if (copied) {
+        setFeedback({
+          tone: 'ok',
+          text:
+            url.length > 12000
+              ? 'Trips are too big for a short link. Share code copied — send that, and they can paste it on Import trips.'
+              : 'Share link copied. Send it to your partner — when they open it, your trips appear on their phone.',
+        })
+      } else {
+        setManualLink(payload)
+        setFeedback({
+          tone: 'info',
+          text:
+            url.length > 12000
+              ? 'Clipboard blocked — copy the share code below, or download the trips file.'
+              : 'Clipboard blocked — copy the link below, or download the trips file.',
+        })
+      }
+    } catch {
+      setFeedback({
+        tone: 'error',
+        text: 'Could not build a share link. Try downloading the trips file.',
+      })
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  function handleDownload() {
+    if (trips.length === 0) {
+      setFeedback({ tone: 'error', text: 'Add a trip before downloading.' })
+      return
+    }
+    downloadTripsFile(trips)
+    setFeedback({
+      tone: 'ok',
+      text: 'Trips file downloaded. Send that file, and they can import it on Import trips.',
+    })
+  }
+
+  async function handleFile(file: File) {
+    setBusy(true)
+    setFeedback({ tone: 'info', text: 'Importing…' })
+    try {
+      const text = await file.text()
+      let incoming: Trip[]
+      try {
+        incoming = parseExportFile(text)
+      } catch {
+        incoming = await decodeShareToken(text)
+      }
+      const count = onImport(incoming)
+      setFeedback({
+        tone: 'ok',
+        text: `Imported ${count} trip${count === 1 ? '' : 's'}. Matching trip IDs were updated.`,
+      })
+    } catch (err) {
+      setFeedback({
+        tone: 'error',
+        text:
+          err instanceof Error
+            ? err.message
+            : 'That file could not be imported.',
+      })
+    } finally {
+      setBusy(false)
+    }
+  }
+
   return (
     <AppShell>
       <div className="page">
@@ -29,6 +148,81 @@ export function TripsPage({ trips, onDelete }: TripsPageProps) {
             New trip
           </Link>
         </header>
+
+        <CloudSyncPanel
+          cloudReady={cloudReady}
+          spaceId={spaceId}
+          syncStatus={syncStatus}
+          syncError={syncError}
+          onCreate={onStartCloud}
+          onJoin={onJoinCloud}
+          onDisconnect={onDisconnectCloud}
+        />
+
+        <section className="share-panel share-panel--banner" aria-labelledby="share-heading">
+          <div>
+            <h2 id="share-heading">One-time share</h2>
+            <p>
+              Prefer a snapshot instead of live sync? Copy a link or download a
+              file. Re-share after you change plans.
+            </p>
+          </div>
+          <div className="share-panel__actions">
+            <button
+              type="button"
+              className="btn btn--primary"
+              disabled={busy}
+              onClick={() => {
+                void handleCopyShareLink()
+              }}
+            >
+              Copy share link
+            </button>
+            <button
+              type="button"
+              className="btn btn--soft"
+              disabled={busy}
+              onClick={handleDownload}
+            >
+              Download trips file
+            </button>
+            <Link to="/import" className="btn btn--ghost">
+              Import trips
+            </Link>
+            <input
+              id={fileInputId}
+              type="file"
+              accept="application/json,.json"
+              className="sr-only"
+              disabled={busy}
+              onChange={(event) => {
+                const file = event.target.files?.[0]
+                if (file) void handleFile(file)
+                event.target.value = ''
+              }}
+            />
+          </div>
+          {feedback ? (
+            <p
+              className={`share-banner share-banner--${feedback.tone}`}
+              role="status"
+            >
+              {feedback.text}
+            </p>
+          ) : null}
+          {manualLink ? (
+            <label className="share-manual">
+              <span>Copy this and send it</span>
+              <textarea
+                className="share-textarea"
+                rows={3}
+                readOnly
+                value={manualLink}
+                onFocus={(event) => event.currentTarget.select()}
+              />
+            </label>
+          ) : null}
+        </section>
 
         {trips.length === 0 ? (
           <div className="empty-state">

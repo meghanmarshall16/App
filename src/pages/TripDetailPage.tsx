@@ -14,6 +14,11 @@ import { TripForm } from '../components/TripForm'
 import { countActivities, countPacked } from '../storage'
 import type { ActivityInput, Trip, TripInput, TripTab } from '../types'
 import { formatTripRange, tripLengthLabel } from '../utils/dates'
+import {
+  buildShareUrl,
+  copyText,
+  encodeShareToken,
+} from '../utils/tripShare'
 
 interface TripDetailPageProps {
   getTrip: (id: string) => Trip | undefined
@@ -57,6 +62,8 @@ export function TripDetailPage({
   const navigate = useNavigate()
   const trip = getTrip(tripId)
   const [editing, setEditing] = useState(false)
+  const [shareNote, setShareNote] = useState<string | null>(null)
+  const [sharing, setSharing] = useState(false)
   const [tab, setTab] = useState<TripTab>(() => parseTab(searchParams.get('tab')))
 
   useEffect(() => {
@@ -67,25 +74,47 @@ export function TripDetailPage({
     return <Navigate to="/trips" replace />
   }
 
-  const bag = countPacked(trip)
+  const currentTrip = trip
+  const bag = countPacked(currentTrip)
 
   function selectTab(next: TripTab) {
     setTab(next)
     setSearchParams(next === 'itinerary' ? {} : { tab: next }, { replace: true })
   }
 
+  async function shareThisTrip() {
+    setSharing(true)
+    setShareNote(null)
+    try {
+      const token = await encodeShareToken([currentTrip])
+      const url = buildShareUrl(token)
+      const copied = await copyText(url.length > 12000 ? token : url)
+      setShareNote(
+        copied
+          ? url.length > 12000
+            ? 'Share code copied — send it, and they can paste it under Import trips.'
+            : 'Share link copied — when they open it, this trip appears on their phone.'
+          : 'Could not copy. Use Share with your partner on the Trips page instead.',
+      )
+    } catch {
+      setShareNote('Could not build a share link right now.')
+    } finally {
+      setSharing(false)
+    }
+  }
+
   return (
     <AppShell>
-      <div className={`trip-hero trip-hero--${trip.coverTone}`}>
+      <div className={`trip-hero trip-hero--${currentTrip.coverTone}`}>
         <div className="trip-hero__inner">
           <Link to="/trips" className="back-link">
             ← All trips
           </Link>
-          <p className="trip-hero__destination">{trip.destination}</p>
-          <h1>{trip.name}</h1>
+          <p className="trip-hero__destination">{currentTrip.destination}</p>
+          <h1>{currentTrip.name}</h1>
           <p className="trip-hero__meta">
-            {formatTripRange(trip.startDate, trip.endDate)} ·{' '}
-            {tripLengthLabel(trip)} · {countActivities(trip)} stops ·{' '}
+            {formatTripRange(currentTrip.startDate, currentTrip.endDate)} ·{' '}
+            {tripLengthLabel(currentTrip)} · {countActivities(currentTrip)} stops ·{' '}
             {bag.packed}/{bag.total} packed
           </p>
           <div className="trip-hero__actions">
@@ -99,13 +128,23 @@ export function TripDetailPage({
             <button
               type="button"
               className="btn btn--hero"
+              disabled={sharing}
+              onClick={() => {
+                void shareThisTrip()
+              }}
+            >
+              {sharing ? 'Preparing…' : 'Share trip'}
+            </button>
+            <button
+              type="button"
+              className="btn btn--hero"
               onClick={() => {
                 if (
                   window.confirm(
-                    `Delete “${trip.name}”? This cannot be undone.`,
+                    `Delete “${currentTrip.name}”? This cannot be undone.`,
                   )
                 ) {
-                  onDelete(trip.id)
+                  onDelete(currentTrip.id)
                   navigate('/trips')
                 }
               }}
@@ -113,6 +152,11 @@ export function TripDetailPage({
               Delete
             </button>
           </div>
+          {shareNote ? (
+            <p className="trip-hero__share-note" role="status">
+              {shareNote}
+            </p>
+          ) : null}
         </div>
       </div>
 
