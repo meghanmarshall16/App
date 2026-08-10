@@ -1391,6 +1391,118 @@
   }
 }
 
+.share-panel {
+  margin-bottom: 1.75rem;
+  padding: 1.25rem 1.35rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.72);
+  animation: riseIn 500ms ease both;
+}
+
+.share-panel--banner {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.share-panel h2 {
+  margin: 0 0 0.35rem;
+  font-family: var(--display);
+  font-size: 1.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.share-panel p {
+  margin: 0;
+  color: var(--ink-soft);
+  max-width: 54ch;
+}
+
+.share-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.share-textarea {
+  width: 100%;
+  margin-top: 0.85rem;
+  padding: 0.85rem 0.95rem;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--ink);
+  font: inherit;
+  resize: vertical;
+  min-height: 7rem;
+}
+
+.share-textarea:focus {
+  outline: 2px solid var(--blue-soft);
+  border-color: var(--blue-deep);
+}
+
+.share-banner {
+  margin: 0.35rem 0 0;
+  padding: 0.7rem 0.85rem;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.share-banner--ok {
+  background: rgba(126, 184, 224, 0.28);
+  color: var(--ink);
+}
+
+.share-banner--info {
+  background: var(--blue-pale);
+  color: var(--ink-soft);
+}
+
+.share-banner--error {
+  background: rgba(180, 35, 24, 0.1);
+  color: var(--danger);
+}
+
+.share-manual {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 0.35rem;
+}
+
+.share-manual span {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.trip-hero__share-note {
+  margin: 0.85rem 0 0;
+  max-width: 42ch;
+  font-size: 0.95rem;
+  font-weight: 600;
+  opacity: 0.92;
+  animation: riseIn 320ms ease both;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 @media (max-width: 480px) {
   .topbar__link {
     display: none;

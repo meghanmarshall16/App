@@ -13,6 +13,7 @@ import {
   updateActivity,
   updateTripMeta,
 } from '../storage'
+import { mergeTrips } from '../utils/tripShare'
 
 export function useTrips() {
   const [trips, setTrips] = useState<Trip[]>(() => loadTrips())
@@ -118,6 +119,11 @@ export function useTrips() {
     [trips],
   )
 
+  const importIncomingTrips = useCallback((incoming: Trip[]) => {
+    setTrips((current) => mergeTrips(current, incoming))
+    return incoming.length
+  }, [])
+
   return {
     trips,
     addTrip,
@@ -131,5 +137,6 @@ export function useTrips() {
     deletePackingItem,
     syncPackingSuggestions,
     getTrip,
+    importIncomingTrips,
   }
 }
