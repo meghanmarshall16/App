@@ -442,6 +442,10 @@
   margin-top: 1.25rem;
 }
 
+.dogs-photo__error {
+  margin-top: 0.75rem;
+}
+
 @media (max-width: 800px) {
   .dogs-photo {
     grid-template-columns: 1fr;
