@@ -1468,6 +1468,20 @@
   color: var(--danger);
 }
 
+.share-manual {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 0.35rem;
+}
+
+.share-manual span {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
 .trip-hero__share-note {
   margin: 0.85rem 0 0;
   max-width: 42ch;

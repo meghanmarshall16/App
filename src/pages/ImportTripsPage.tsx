@@ -12,6 +12,9 @@ interface ImportTripsPageProps {
   onImport: (trips: Trip[]) => number
 }
 
+const PENDING_IMPORT_KEY = 'trips-trips.pending-import'
+const finishedHashImports = new Set<string>()
+
 export function ImportTripsPage({ onImport }: ImportTripsPageProps) {
   const navigate = useNavigate()
   const fileInputId = useId()
@@ -19,7 +22,6 @@ export function ImportTripsPage({ onImport }: ImportTripsPageProps) {
   const [status, setStatus] = useState<'idle' | 'working' | 'done'>('idle')
   const [message, setMessage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const autoRan = useRef(false)
   const onImportRef = useRef(onImport)
   onImportRef.current = onImport
 
@@ -41,16 +43,40 @@ export function ImportTripsPage({ onImport }: ImportTripsPageProps) {
   }
 
   useEffect(() => {
-    if (autoRan.current) return
     const hash = window.location.hash.replace(/^#/, '').trim()
-    if (!hash) return
-    autoRan.current = true
-    setStatus('working')
+    let token = hash
+    if (token) {
+      try {
+        sessionStorage.setItem(PENDING_IMPORT_KEY, token)
+      } catch {
+        // Ignore quota / private-mode failures; hash path still works once.
+      }
+      history.replaceState(
+        null,
+        '',
+        `${window.location.pathname}${window.location.search}`,
+      )
+    } else {
+      try {
+        token = sessionStorage.getItem(PENDING_IMPORT_KEY) ?? ''
+      } catch {
+        token = ''
+      }
+    }
+    if (!token) return
 
-    let cancelled = false
-    void decodeShareToken(hash)
+    let alive = true
+    setStatus('working')
+    void decodeShareToken(token)
       .then((trips) => {
-        if (cancelled) return
+        if (!alive) return
+        try {
+          sessionStorage.removeItem(PENDING_IMPORT_KEY)
+        } catch {
+          // ignore
+        }
+        if (finishedHashImports.has(token)) return
+        finishedHashImports.add(token)
         if (trips.length === 0) {
           setError('No trips were found to import.')
           setStatus('idle')
@@ -67,7 +93,12 @@ export function ImportTripsPage({ onImport }: ImportTripsPageProps) {
         }, 900)
       })
       .catch((err: unknown) => {
-        if (cancelled) return
+        if (!alive) return
+        try {
+          sessionStorage.removeItem(PENDING_IMPORT_KEY)
+        } catch {
+          // ignore
+        }
         setStatus('idle')
         setError(
           err instanceof Error
@@ -76,14 +107,8 @@ export function ImportTripsPage({ onImport }: ImportTripsPageProps) {
         )
       })
 
-    history.replaceState(
-      null,
-      '',
-      `${window.location.pathname}${window.location.search}`,
-    )
-
     return () => {
-      cancelled = true
+      alive = false
     }
   }, [navigate])
 

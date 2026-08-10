@@ -26,6 +26,7 @@ export function TripsPage({ trips, onDelete, onImport }: TripsPageProps) {
   const fileInputId = useId()
   const [busy, setBusy] = useState(false)
   const [feedback, setFeedback] = useState<ShareFeedback>(null)
+  const [manualLink, setManualLink] = useState<string | null>(null)
 
   async function handleCopyShareLink() {
     if (trips.length === 0) {
@@ -33,25 +34,29 @@ export function TripsPage({ trips, onDelete, onImport }: TripsPageProps) {
       return
     }
     setBusy(true)
+    setManualLink(null)
     setFeedback({ tone: 'info', text: 'Building a share link…' })
     try {
       const token = await encodeShareToken(trips)
       const url = buildShareUrl(token)
-      if (url.length > 12000) {
-        const copied = await copyText(token)
+      const payload = url.length > 12000 ? token : url
+      const copied = await copyText(payload)
+      if (copied) {
         setFeedback({
-          tone: copied ? 'ok' : 'error',
-          text: copied
-            ? 'Trips are too big for a short link. Share code copied — send that, and they can paste it on Import trips.'
-            : 'Could not copy a share code. Download the trips file instead.',
+          tone: 'ok',
+          text:
+            url.length > 12000
+              ? 'Trips are too big for a short link. Share code copied — send that, and they can paste it on Import trips.'
+              : 'Share link copied. Send it to your partner — when they open it, your trips appear on their phone.',
         })
       } else {
-        const copied = await copyText(url)
+        setManualLink(payload)
         setFeedback({
-          tone: copied ? 'ok' : 'error',
-          text: copied
-            ? 'Share link copied. Send it to your partner — when they open it, your trips appear on their phone.'
-            : 'Could not copy the link. Try downloading the trips file instead.',
+          tone: 'info',
+          text:
+            url.length > 12000
+              ? 'Clipboard blocked — copy the share code below, or download the trips file.'
+              : 'Clipboard blocked — copy the link below, or download the trips file.',
         })
       }
     } catch {
@@ -174,6 +179,18 @@ export function TripsPage({ trips, onDelete, onImport }: TripsPageProps) {
             >
               {feedback.text}
             </p>
+          ) : null}
+          {manualLink ? (
+            <label className="share-manual">
+              <span>Copy this and send it</span>
+              <textarea
+                className="share-textarea"
+                rows={3}
+                readOnly
+                value={manualLink}
+                onFocus={(event) => event.currentTarget.select()}
+              />
+            </label>
           ) : null}
         </section>
 
