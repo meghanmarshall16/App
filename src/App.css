@@ -446,6 +446,158 @@
   margin-top: 0.75rem;
 }
 
+.import-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--ink);
+}
+
+.import-callout strong {
+  display: block;
+  margin-bottom: 0.15rem;
+}
+
+.import-callout small {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.import-drop {
+  position: relative;
+  display: grid;
+  gap: 0.35rem;
+  justify-items: center;
+  padding: 1.75rem 1.25rem;
+  border: 1.5px dashed rgba(90, 159, 208, 0.55);
+  border-radius: 14px;
+  background: rgba(215, 235, 247, 0.45);
+  cursor: pointer;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.import-drop input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.import-drop__title {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.import-drop__hint {
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+}
+
+.import-filename {
+  margin: 0 0 1.25rem;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.import-sheets,
+.import-preview {
+  margin-bottom: 1.5rem;
+}
+
+.import-sheets h2,
+.import-preview h2 {
+  margin: 0 0 0.5rem;
+  font-family: var(--display);
+  font-size: 1.45rem;
+  text-transform: uppercase;
+}
+
+.import-sheet-list {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.import-sheet {
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+}
+
+.import-sheet input {
+  margin-top: 0.2rem;
+  accent-color: var(--black);
+}
+
+.import-sheet strong {
+  display: block;
+}
+
+.import-sheet small {
+  color: var(--ink-soft);
+}
+
+.import-preview__summary {
+  margin: 0 0 1rem;
+  font-weight: 600;
+  color: var(--blue-deep);
+}
+
+.import-warnings {
+  margin: 1rem 0;
+  padding-left: 1.1rem;
+  color: var(--danger);
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+}
+
+.import-day-preview {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.import-day {
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.import-day h3 {
+  margin: 0 0 0.45rem;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  text-transform: uppercase;
+}
+
+.import-day ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--ink-soft);
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.92rem;
+}
+
+.import-actions {
+  margin-top: 1.25rem;
+}
+
 @media (max-width: 800px) {
   .dogs-photo {
     grid-template-columns: 1fr;

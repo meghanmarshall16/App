@@ -220,6 +220,60 @@ export function createTrip(input: TripInput): Trip {
   }
 }
 
+export function createTripFromImport(input: {
+  name: string
+  destination: string
+  startDate: string
+  endDate: string
+  coverTone?: CoverTone
+  days: { date: string; activities: ActivityInput[] }[]
+}): Trip {
+  const destination = input.destination.trim() || 'Imported destination'
+  const coverTone = input.coverTone ?? 'sky'
+  const byDate = new Map(
+    input.days.map((day) => [
+      day.date,
+      day.activities.map((activity) => ({
+        ...activity,
+        id: uid('act'),
+      })),
+    ]),
+  )
+
+  const startDate = input.startDate
+  const endDate = input.endDate
+  const days = buildDays(startDate, endDate).map((day) => ({
+    ...day,
+    activities: (byDate.get(day.date) ?? []).sort((a, b) =>
+      (a.time || '99:99').localeCompare(b.time || '99:99'),
+    ),
+  }))
+
+  // Include any dates outside a broken range by appending
+  for (const [date, activities] of byDate) {
+    if (!days.some((day) => day.date === date)) {
+      days.push({
+        id: uid('day'),
+        date,
+        activities,
+      })
+    }
+  }
+  days.sort((a, b) => a.date.localeCompare(b.date))
+
+  return {
+    id: uid('trip'),
+    name: input.name.trim() || 'Imported trip',
+    destination,
+    startDate: days[0]?.date ?? startDate,
+    endDate: days[days.length - 1]?.date ?? endDate,
+    coverTone,
+    createdAt: new Date().toISOString(),
+    days,
+    packingList: buildPackingList(destination),
+  }
+}
+
 export function updateTripMeta(trip: Trip, input: TripInput): Trip {
   const sameRange =
     trip.startDate === input.startDate && trip.endDate === input.endDate

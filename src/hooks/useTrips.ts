@@ -4,6 +4,7 @@ import {
   addActivity,
   addPackingItem,
   createTrip,
+  createTripFromImport,
   loadTrips,
   refreshPackingSuggestions,
   removeActivity,
@@ -26,6 +27,21 @@ export function useTrips() {
     setTrips((current) => [trip, ...current])
     return trip
   }, [])
+
+  const importTrip = useCallback(
+    (input: {
+      name: string
+      destination: string
+      startDate: string
+      endDate: string
+      days: { date: string; activities: ActivityInput[] }[]
+    }) => {
+      const trip = createTripFromImport(input)
+      setTrips((current) => [trip, ...current])
+      return trip
+    },
+    [],
+  )
 
   const editTrip = useCallback((tripId: string, input: TripInput) => {
     setTrips((current) =>
@@ -121,6 +137,7 @@ export function useTrips() {
   return {
     trips,
     addTrip,
+    importTrip,
     editTrip,
     deleteTrip,
     createActivity,
