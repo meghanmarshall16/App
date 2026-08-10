@@ -74,4 +74,4 @@ export const COVER_TONES: { id: CoverTone; label: string }[] = [
   { id: 'mist', label: 'Mist' },
 ]
 
-export type TripTab = 'itinerary' | 'packing' | 'suggestions'
+export type TripTab = 'calendar' | 'itinerary' | 'packing' | 'suggestions'

@@ -26,7 +26,7 @@ export function NewTripPage({ onCreate }: NewTripPageProps) {
           onCancel={() => navigate('/trips')}
           onSubmit={(input) => {
             const trip = onCreate(input)
-            navigate(`/trips/${trip.id}`)
+            navigate(`/trips/${trip.id}?tab=calendar`)
           }}
         />
       </div>
