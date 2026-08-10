@@ -28,8 +28,8 @@ export function LandingPage() {
           </p>
           <h1 className="hero__headline">Personal travel, planned your way.</h1>
           <p className="hero__lede">
-            Day-by-day itineraries, packing lists, and destination ideas for
-            trips off the clock — with the dogs along for the branding.
+            Day-by-day itineraries and packing lists for trips off the clock —
+            with the dogs along for the branding.
           </p>
           <div className="hero__actions">
             <Link to="/trips" className="btn btn--primary btn--large">

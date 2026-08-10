@@ -21,8 +21,8 @@ export function TripsPage({ trips, onDelete }: TripsPageProps) {
             </p>
             <h1>Trips</h1>
             <p className="page-lede">
-              Every getaway lives here — open one to shape the days, packing
-              list, and destination ideas.
+              Every getaway lives here — open one to shape the days and packing
+              list.
             </p>
           </div>
           <Link to="/trips/new" className="btn btn--primary">

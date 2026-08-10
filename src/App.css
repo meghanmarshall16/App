@@ -1089,17 +1089,6 @@
   font-size: 2rem;
 }
 
-.climate-chip {
-  display: inline-block;
-  margin: 0.85rem 0 0;
-  padding: 0.4rem 0.7rem;
-  border-radius: 8px;
-  background: var(--blue-pale);
-  color: var(--black);
-  font-size: 0.88rem;
-  font-weight: 600;
-}
-
 .pack-progress {
   height: 8px;
   border-radius: 999px;
@@ -1186,83 +1175,6 @@
 
 .pack-tag--custom {
   color: var(--ink-soft);
-}
-
-.suggest-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 1.5rem;
-}
-
-.suggest-heading {
-  margin: 0 0 0.75rem;
-  font-family: var(--display);
-  font-size: 1.35rem;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-}
-
-.suggest-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 0.85rem;
-}
-
-.suggest-card {
-  padding: 1rem 0;
-  border-bottom: 1px solid var(--line);
-}
-
-.suggest-card:last-child {
-  border-bottom: 0;
-}
-
-.suggest-card__cat {
-  margin: 0 0 0.25rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--blue-deep);
-}
-
-.suggest-card h4 {
-  margin: 0 0 0.35rem;
-  font-size: 1.05rem;
-}
-
-.suggest-card p {
-  margin: 0 0 0.75rem;
-  color: var(--ink-soft);
-  font-size: 0.92rem;
-}
-
-.tip-list {
-  margin: 0 0 1.5rem;
-  padding-left: 1.1rem;
-  color: var(--ink-soft);
-  display: grid;
-  gap: 0.55rem;
-}
-
-.suggest-pack {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 0.55rem;
-}
-
-.suggest-pack li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.55rem 0;
-  border-bottom: 1px solid var(--line);
-  font-size: 0.92rem;
 }
 
 .panel-form {

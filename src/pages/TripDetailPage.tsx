@@ -8,7 +8,6 @@ import {
 } from 'react-router-dom'
 import { AppShell } from '../components/AppShell'
 import { DaySection } from '../components/DaySection'
-import { DestinationSuggestions } from '../components/DestinationSuggestions'
 import { PackingList } from '../components/PackingList'
 import { TripCalendar } from '../components/TripCalendar'
 import { TripForm } from '../components/TripForm'
@@ -35,12 +34,7 @@ interface TripDetailPageProps {
 }
 
 function parseTab(value: string | null): TripTab {
-  if (
-    value === 'calendar' ||
-    value === 'itinerary' ||
-    value === 'packing' ||
-    value === 'suggestions'
-  ) {
+  if (value === 'calendar' || value === 'itinerary' || value === 'packing') {
     return value
   }
   return 'itinerary'
@@ -150,7 +144,6 @@ export function TripDetailPage({
               ['calendar', 'Calendar'],
               ['itinerary', 'Itinerary'],
               ['packing', 'Packing'],
-              ['suggestions', 'Suggestions'],
             ] as const
           ).map(([id, label]) => (
             <button
@@ -205,20 +198,6 @@ export function TripDetailPage({
             onToggle={(itemId) => onTogglePackingItem(trip.id, itemId)}
             onRemove={(itemId) => onRemovePackingItem(trip.id, itemId)}
             onRefreshSuggestions={() => onRefreshPacking(trip.id)}
-          />
-        ) : null}
-
-        {tab === 'suggestions' ? (
-          <DestinationSuggestions
-            trip={trip}
-            onAddPlace={(dayId, input) => {
-              onAddActivity(trip.id, dayId, input)
-              selectTab('itinerary')
-            }}
-            onAddPacking={(label) => {
-              onAddPackingItem(trip.id, label)
-              selectTab('packing')
-            }}
           />
         ) : null}
       </div>
