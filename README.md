@@ -10,6 +10,7 @@ A personal travel itinerary app: day-by-day plans, packing lists, calendar view,
 - Packing lists with destination-based packing items
 - Upload a photo of your dogs on the home page
 - Data saved in your browser (`localStorage`)
+- Share trips with a partner via link or downloadable file
 
 ## Get started
 
@@ -21,6 +22,16 @@ npm run dev
 ```
 
 Open the local URL Vite prints (usually `http://localhost:5173`).
+
+## Share trips with a partner
+
+Trips live in each browser until you send them:
+
+1. Open **Trips** → **Copy share link** (or **Download trips file**)
+2. Send that to your partner
+3. They open the link (or **Import trips** and upload/paste)
+
+Share again whenever you change plans. Matching trip IDs update on import instead of duplicating.
 
 ## Scripts
 

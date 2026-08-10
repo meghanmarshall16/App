@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { useTrips } from './hooks/useTrips'
+import { ImportTripsPage } from './pages/ImportTripsPage'
 import { LandingPage } from './pages/LandingPage'
 import { NewTripPage } from './pages/NewTripPage'
 import { TripDetailPage } from './pages/TripDetailPage'
@@ -20,6 +21,7 @@ export default function App() {
     deletePackingItem,
     syncPackingSuggestions,
     getTrip,
+    importIncomingTrips,
   } = useTrips()
 
   return (
@@ -28,9 +30,19 @@ export default function App() {
         <Route path="/" element={<LandingPage />} />
         <Route
           path="/trips"
-          element={<TripsPage trips={trips} onDelete={deleteTrip} />}
+          element={
+            <TripsPage
+              trips={trips}
+              onDelete={deleteTrip}
+              onImport={importIncomingTrips}
+            />
+          }
         />
         <Route path="/trips/new" element={<NewTripPage onCreate={addTrip} />} />
+        <Route
+          path="/import"
+          element={<ImportTripsPage onImport={importIncomingTrips} />}
+        />
         <Route
           path="/trips/:tripId"
           element={
