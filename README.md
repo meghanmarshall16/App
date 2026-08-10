@@ -1,13 +1,13 @@
 # Trip's Trips
 
-A personal travel itinerary app: day-by-day plans, packing lists, destination ideas, and a spot for your dogs' photo.
+A personal travel itinerary app: day-by-day plans, packing lists, calendar view, and a spot for your dogs' photo.
 
 ## Features
 
 - Create trips with destination, dates, and a cover tone
+- Calendar view of trip days
 - Day-by-day itinerary from your date range
-- Packing lists with destination-based suggestions
-- Destination suggestions for places, tips, and packing
+- Packing lists with destination-based packing items
 - Upload a photo of your dogs on the home page
 - Data saved in your browser (`localStorage`)
 

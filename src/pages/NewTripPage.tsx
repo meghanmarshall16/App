@@ -17,8 +17,8 @@ export function NewTripPage({ onCreate }: NewTripPageProps) {
           <p className="eyebrow">New adventure</p>
           <h1>Plan a trip</h1>
           <p className="page-lede">
-            Name the place, set the dates, and we&apos;ll build days, packing
-            suggestions, and destination ideas.
+            Name the place, set the dates, and we&apos;ll build days and a
+            packing list for you.
           </p>
         </header>
         <TripForm
